@@ -32,8 +32,12 @@ def terrain_out_of_bounds(
     if env.scene.cfg.terrain.terrain_type == "plane":
         # we have infinite terrain because it is a plane
         return torch.zeros(env.num_envs, dtype=torch.bool, device=env.device)
-    elif env.scene.cfg.terrain.terrain_type == "generator":
-        # obtain the size of the sub-terrains
+    elif env.scene.terrain.cfg.terrain_type in ["generator", "usd"]:
+    if env.scene.terrain.cfg.terrain_type == "usd":
+        # map_width, map_height = 100.32, 80.9 #safety_park_fourth_train
+        map_width, map_height = 185.26, 146.9 #Full_Park_Flattened
+    else:
+    # obtain the size of the sub-terrains
         terrain_gen_cfg = env.scene.terrain.cfg.terrain_generator
         grid_width, grid_length = terrain_gen_cfg.size
         n_rows, n_cols = terrain_gen_cfg.num_rows, terrain_gen_cfg.num_cols
@@ -41,7 +45,6 @@ def terrain_out_of_bounds(
         # compute the size of the map
         map_width = n_rows * grid_width + 2 * border_width
         map_height = n_cols * grid_length + 2 * border_width
-
         # extract the used quantities (to enable type-hinting)
         asset: RigidObject = env.scene[asset_cfg.name]
 
