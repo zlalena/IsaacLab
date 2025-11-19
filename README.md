@@ -3,6 +3,7 @@
 ---
 
 # Isaac Lab
+./isaaclab.sh -p /home/nvidia/Reconstructing_Outdoor_Environments/Code/robo_rl2/policy_inference_in_usd_safetypark.py --checkpoint /home/nvidia/Reconstructing_Outdoor_Environments/Code/robo_rl2/policy.pt --keyboard --terrain_usd /home/nvidia/Reconstructing_Outdoor_Environments/Data/isaac_files/safety_park_isaac_scene.usd
 
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-5.1.0-silver.svg)](https://docs.isaacsim.omniverse.nvidia.com/latest/index.html)
 [![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://docs.python.org/3/whatsnew/3.11.html)
