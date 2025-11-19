@@ -26,7 +26,7 @@ from isaaclab.app import AppLauncher
 parser = argparse.ArgumentParser(description="Tutorial on inferencing a policy on a Boston Dynamics Spot robot on a custom terrain mesh.")
 parser.add_argument("--checkpoint", type=str, help="Path to model checkpoint exported as jit.", required=True)
 parser.add_argument("--keyboard", action="store_true", default=False, help="Use keyboard teleoperation to control the robot.")
-parser.add_argument("--gamepade", action="store_true", default=False, help="Use gamepad teleoperation to control the robot.")
+parser.add_argument("--gamepad", action="store_true", default=False, help="Use gamepad teleoperation to control the robot.")
 parser.add_argument("--terrain_usd", type=str, help="Path to terrain USD file. Default is generic warehouse.", required=False)
 
 # append AppLauncher cli args
