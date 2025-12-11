@@ -90,7 +90,7 @@ def main():
 
     elif args_cli.gamepad:
         from isaaclab.devices.gamepad.se2_gamepad import Se2GamepadCfg, Se2Gamepad
-        gamepad = Se2Gamepad(cfg=Se2KeyboardCfg(v_x_sensitivity = 1.0, v_y_sensitivity = 1.0, omega_z_sensitivity = 1.0, dead_zone = 0.01))
+        gamepad = Se2Gamepad(cfg=Se2GamepadCfg(v_x_sensitivity = 1.0, v_y_sensitivity = 1.0, omega_z_sensitivity = 1.0, dead_zone = 0.01))
         print(gamepad)
 
     # create environment
