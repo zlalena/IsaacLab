@@ -1,6 +1,6 @@
 {
   "airport": {
-    "terrain_usd": "LAB/airport/demo_salced_down.usd",
+    "terrain_usd": "airport/airport.usd",
     "robot_position": [-10, 10, 2.5],
     "robot_orientation": [1.0, 0.0, 0.0, 0.0],
     "camera_distance": 20.0,
@@ -9,7 +9,7 @@
     "sensitivity": [3, 3, 2.5]
   },
   "safetypark": {
-    "terrain_usd": "LAB/safety_park/safety_park.usd",
+    "terrain_usd": "safety_park/safety_park.usd",
     "robot_position": [-7, -40.0, 0.6],
     "robot_orientation": [1, 0.0, 0.0, 0.0],
     "camera_distance": 30.0,
