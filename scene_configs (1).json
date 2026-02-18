@@ -1,0 +1,21 @@
+{
+  "airport": {
+    "terrain_usd": "airport/demo_salced_down.usd",
+    "robot_position": [-10, 10, 2.5],
+    "robot_orientation": [1.0, 0.0, 0.0, 0.0],
+    "camera_distance": 20.0,
+    "camera_height": 20.0,
+    "description": "Airport mesh scene",
+    "sensitivity": [3, 3, 2.5]
+  },
+  "safetypark": {
+    "terrain_usd": "safety_park/safety_park.usd",
+    "robot_position": [-7, -40.0, 0.6],
+    "robot_orientation": [1, 0.0, 0.0, 0.0],
+    "camera_distance": 30.0,
+    "camera_height": 30.0,
+    "description": "Safety park scene",
+    "sensitivity": [3, 3, 2.5]
+  }
+}
+
