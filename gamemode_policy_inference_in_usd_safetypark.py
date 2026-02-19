@@ -215,34 +215,34 @@ def main():
     )  # Default if not specified
     v_x_sens, v_y_sens, omega_z_sens = sensitivity[0], sensitivity[1], sensitivity[2]
 
-    if args_cli.keyboard:
-        # Setup keyboard control for SE(2) motion (planar movement + rotation)
+    use_keyboard = args_cli.keyboard
+    invert_axes = False
+
+    if use_keyboard:
         from isaaclab.devices.keyboard.se2_keyboard import Se2KeyboardCfg, Se2Keyboard
 
-        keyboard = Se2Keyboard(
+        input_device = Se2Keyboard(
             cfg=Se2KeyboardCfg(
-                v_x_sensitivity=v_x_sens,  # Forward/backward speed
-                v_y_sensitivity=v_y_sens,  # Left/right strafe speed
-                omega_z_sensitivity=omega_z_sens,  # Rotation speed
+                v_x_sensitivity=v_x_sens,
+                v_y_sensitivity=v_y_sens,
+                omega_z_sensitivity=omega_z_sens,
             )
         )
         print(
             f"[INFO] Keyboard control enabled with sensitivity: [{v_x_sens}, {v_y_sens}, {omega_z_sens}]"
         )
-
-    elif args_cli.gamepad:
-        # Setup gamepad control for SE(2) motion
-        # Left stick: forward/backward/strafe, Right stick: rotation
+    else:
         from isaaclab.devices.gamepad.se2_gamepad import Se2GamepadCfg, Se2Gamepad
 
-        gamepad = Se2Gamepad(
+        input_device = Se2Gamepad(
             cfg=Se2GamepadCfg(
-                v_x_sensitivity=v_x_sens,  # Forward/backward speed
-                v_y_sensitivity=v_y_sens,  # Left/right strafe speed
-                omega_z_sensitivity=omega_z_sens,  # Rotation speed
-                dead_zone=0.01,  # Ignore small stick movements
+                v_x_sensitivity=v_x_sens,
+                v_y_sensitivity=v_y_sens,
+                omega_z_sensitivity=omega_z_sens,
+                dead_zone=0.01,
             )
         )
+        invert_axes = True
         print(
             f"[INFO] Gamepad control enabled with sensitivity: [{v_x_sens}, {v_y_sens}, {omega_z_sens}]"
         )
@@ -435,32 +435,17 @@ def main():
             # PROCESS CONTROL INPUT
             # ========================================
 
-            # Keyboard control: read keyboard state and inject into observation
-            if args_cli.keyboard:
-                cmd = keyboard.advance()  # Returns [v_x, v_y, omega_z]
-                cmd_tensor = torch.tensor(cmd)
-                policy_tensor: torch.Tensor = obs["policy"]  # type: ignore
-                policy_tensor = policy_tensor.clone()
-                # Inject command into observation at indices 9:12 (velocity commands)
-                policy_tensor[:, 9:12] = cmd_tensor.to(
-                    policy_tensor.device, policy_tensor.dtype
-                )
-                obs["policy"] = policy_tensor
-
-            # Gamepad control: read gamepad state and inject into observation
-            if args_cli.gamepad:
-                cmd = gamepad.advance()  # Returns [v_x, v_y, omega_z]
-                # Fix inverted controls by negating axes
-                cmd[1] = -cmd[1]  # Lateral movement (left stick left/right)
-                cmd[2] = -cmd[2]  # Rotation (right stick left/right)
-                cmd_tensor = torch.tensor(cmd)
-                policy_tensor: torch.Tensor = obs["policy"]  # type: ignore
-                policy_tensor = policy_tensor.clone()
-                # Inject command into observation at indices 9:12 (velocity commands)
-                policy_tensor[:, 9:12] = cmd_tensor.to(
-                    policy_tensor.device, policy_tensor.dtype
-                )
-                obs["policy"] = policy_tensor
+            cmd = input_device.advance()  # Returns [v_x, v_y, omega_z]
+            if invert_axes:
+                cmd[1] = -cmd[1]  # Lateral movement
+                cmd[2] = -cmd[2]  # Rotation
+            cmd_tensor = torch.tensor(cmd)
+            policy_tensor: torch.Tensor = obs["policy"]  # type: ignore
+            policy_tensor = policy_tensor.clone()
+            policy_tensor[:, 9:12] = cmd_tensor.to(
+                policy_tensor.device, policy_tensor.dtype
+            )
+            obs["policy"] = policy_tensor
 
             # ========================================
             # RUN POLICY AND STEP SIMULATION
@@ -586,4 +571,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    simulation_app.close()
     simulation_app.close()
